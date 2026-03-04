@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<script src="js/vue.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+			integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous">
+		</script>
+		<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"
+			integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous">
+		</script>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+			integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+		<link rel="stylesheet" href="/myweb/css/h1.css" />
+		<style type="text/css">
+			/* 桌面端默认样式 */
+			/* 桌面端默认样式 */
+			body {
+			    background-image: url('img/a4.png');
+			    background-size: cover;
+			    background-position: center;
+			    background-repeat: no-repeat;
+			    background-attachment: fixed;
+			    min-height: 100vh;
+			    margin: 0;
+			}
+			
+			/* 移动端样式 - 单独写一个媒体查询 */
+			@media (max-width: 768px) {
+			    body {
+			        background-attachment: scroll;
+			        /* 如果需要更换背景图片才取消注释下面这行 */
+			        /* background-image: url('mobile-bg.jpg'); */
+			    }
+			}
+			 body {
+			       
+					margin-top: 10vh;  /* 关键：控制按钮距顶部的距离 */
+					text-align: center; /* 水平居中 */
+			    }
+			/* 按钮样式 - 简约版 */
+			.life-button {
+			    /* 文字样式 */
+			    color: floralwhite;
+			    font-size: 65px;
+			    font-weight: bold;
+			    text-decoration: none; /* 去掉下划线 */
+			
+			
+			    transition: all 0.3s ease;
+			    position: relative;
+			    padding: 5px 0; /* 增加一点上下间距 */
+			    
+			    /* 可点击提示 */
+			    cursor: pointer;
+			}
+			
+			/* 鼠标悬停效果 */
+			.life-button:hover {
+			    color: blanchedalmond; /* 更深的绿色 */
+			    transform: scale(1.05); /* 轻微放大 */
+			}
+			
+			/* 点击效果 */
+			.life-button:active {
+			    transform: scale(0.98);
+			}
+			
+			/* 添加微妙的文字阴影，增强可读性 */
+			.life-button {
+			    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+		</style>
+	</head>
+	<body>
+		<h1>第八课 生命可贵</h1>
+		<a href="choics.html" class="life-button">第二框 敬畏生命</a>
+	</body>
+</html>

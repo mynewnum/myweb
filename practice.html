@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实践训练 - 敬畏生命知识检测</title>
+	<script src="js/vue.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+		integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous">
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"
+		integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous">
+	</script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+		integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #e0f7e9 0%, #a5d6a7 100%);
+            min-height: 100vh;
+            color: #2e7d32;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* 背景装饰 - 与review页面完全一致 */
+        .decoration {
+            position: absolute;
+            z-index: 1;
+        }
+        
+        .tree {
+            width: 100px;
+            height: 120px;
+            background: #388e3c;
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        
+        .tree:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: #5d4037;
+            bottom: -40px;
+            left: 40px;
+        }
+        
+        .cloud {
+            width: 120px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        .cloud:before, .cloud:after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+        }
+        
+        .cloud:before {
+            width: 40px;
+            height: 40px;
+            top: -20px;
+            left: 20px;
+        }
+        
+        .cloud:after {
+            width: 60px;
+            height: 60px;
+            top: -30px;
+            right: 20px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* 添加小鸟动画 */
+        .bird {
+            position: absolute;
+            bottom: 40px;
+            right: 15%;
+            font-size: 30px;
+            animation: fly 12s linear infinite;
+        }
+        
+        @keyframes fly {
+            0% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-50px) translateY(-15px); }
+            50% { transform: translateX(-100px) translateY(0); }
+            75% { transform: translateX(-150px) translateY(15px); }
+            100% { transform: translateX(-200px) translateY(0); }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(46, 125, 50, 0.15);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px dashed #81c784;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1b5e20;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(129, 199, 132, 0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #4caf50;
+        }
+        
+        /* 考试信息 */
+        .exam-info {
+            background: #f1f8e9;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4caf50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px 20px;
+        }
+        
+        .info-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* 题目容器 */
+        .question-container {
+            margin-bottom: 40px;
+        }
+        
+        .question-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.1);
+            border: 2px solid #c8e6c9;
+            display: none;
+        }
+        
+        .question-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            color: #2e7d32;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        /* 选项样式 */
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .option {
+            background: #f8fdf8;
+            border: 2px solid #c8e6c9;
+            border-radius: 12px;
+            padding: 18px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+            border-color: #4caf50;
+        }
+        
+        .option.selected {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+        
+        .option.correct {
+            background: #c8e6c9;
+            border-color: #2e7d32;
+        }
+        
+        .option.incorrect {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+        
+        .option-letter {
+            width: 36px;
+            height: 36px;
+            background: #4caf50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        /* 答题反馈 */
+        .feedback-area {
+            display: none;
+            background: #f1f8e9;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px solid #4caf50;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .feedback-area.show {
+            display: block;
+        }
+        
+        .feedback-title {
+            font-size: 1.5rem;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .correct-answer {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .character-speech {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 2px solid #c8e6c9;
+            font-style: italic;
+            position: relative;
+        }
+        
+        .character-speech:before {
+            content: '"';
+            font-size: 3rem;
+            color: #c8e6c9;
+            position: absolute;
+            top: -10px;
+            left: 10px;
+        }
+        
+        /* 按钮区域 */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 20px;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .btn-prev {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+        
+        .btn-prev:hover:not(:disabled) {
+            background: #4caf50;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-next {
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            color: white;
+        }
+        
+        .btn-next:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.4);
+        }
+        
+        .btn-submit {
+            background: linear-gradient(45deg, #ff9800, #f57c00);
+            color: white;
+            display: none;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            border: none;
+            color: #666;
+        }
+        
+        /* 返回按钮 */
+        .back-button-container {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #81c784;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+        }
+        
+        /* 结果弹窗 */
+        .result-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .result-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: popIn 0.5s ease;
+        }
+        
+        .result-score {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .result-pass {
+            color: #4caf50;
+        }
+        
+        .result-fail {
+            color: #f44336;
+        }
+        
+        .result-message {
+            font-size: 1.3rem;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+        
+        .result-details {
+            background: #f8fdf8;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .modal-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .modal-btn-retry {
+            background: #f44336;
+            color: white;
+        }
+        
+        .modal-btn-close {
+            background: #4caf50;
+            color: white;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .exam-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+            
+            .button-container {
+                flex-direction: column;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+            }
+            
+            .bird {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tree, .cloud {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰 -->
+    <div class="decoration tree"></div>
+    <div class="decoration cloud"></div>
+    <div class="decoration bird">🦜</div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>📝 实践训练</h1>
+            <p class="subtitle">检测你对"敬畏生命"知识的掌握程度</p>
+        </div>
+        
+        <!-- 考试信息 -->
+        <div class="exam-info">
+            <div class="info-item">
+                <div class="info-value" id="currentQuestion">1</div>
+                <div class="info-label">当前题目</div>
+            </div>
+            <div class="info-item">
+                <div class="info-value" id="scoreDisplay">0</div>
+                <div class="info-label">得分</div>
+            </div>
+            <div class="info-item">
+                <div class="info-value" id="timeDisplay">5:00</div>
+                <div class="info-label">剩余时间</div>
+            </div>
+        </div>
+        
+        <!-- 题目容器 -->
+        <div class="question-container" id="questionContainer">
+            <!-- 题目将通过JavaScript动态生成 -->
+        </div>
+        
+        <!-- 反馈区域 -->
+        <div class="feedback-area" id="feedbackArea">
+            <div class="feedback-title" id="feedbackTitle"></div>
+            <div id="feedbackContent"></div>
+            <div class="character-speech" id="characterSpeech"></div>
+        </div>
+        
+        <!-- 按钮区域 -->
+        <div class="button-container">
+            <button class="btn btn-prev" id="prevBtn" disabled>← 上一题</button>
+            <button class="btn btn-next" id="nextBtn" disabled>下一题 →</button>
+            <button class="btn btn-submit" id="submitBtn">提交试卷</button>
+        </div>
+        
+        <!-- 返回按钮 -->
+        <div class="back-button-container">
+            <a href="choics.html" class="back-button">
+                ← 返回选择页面
+            </a>
+        </div>
+    </div>
+    
+    <!-- 结果弹窗 -->
+    <div class="result-modal" id="resultModal">
+        <div class="result-content">
+            <h2 id="resultTitle">测试结果</h2>
+            <div class="result-score" id="resultScore">0</div>
+            <div class="result-message" id="resultMessage"></div>
+            <div class="result-details" id="resultDetails"></div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-retry" id="retryBtn">重新测试</button>
+                <button class="modal-btn modal-btn-close" id="closeBtn">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 考试数据
+        const examData = {
+            currentQuestionIndex: 0,
+            score: 0,
+            totalQuestions: 5,
+            timeLeft: 300, // 5分钟 = 300秒
+            answers: {},
+            questionsAnswered: 0
+        };
+
+        // 题目数据（5道中等难度题目）
+        const questions = [
+            {
+                id: 1,
+                question: "以下关于'生命至上'的理解，最准确的是？",
+                options: [
+                    "A. 在紧急情况下，优先考虑最年轻的生命",
+                    "B. 将生命价值放在第一位，珍视每一个生命",
+                    "C. 只有人类的生命才需要被保护",
+                    "D. 为了集体利益可以牺牲个人生命"
+                ],
+                correctAnswer: 1,
+                explanation: "生命至上意味着将生命价值放在第一位，珍视每一个生命。它强调所有生命都是宝贵的，都应该得到尊重和保护，而不是按照年龄、物种或其他标准来区分价值。",
+                characterSpeech: "生命至上是敬畏生命的核心原则，它提醒我们每一个生命都同样宝贵！"
+            },
+            {
+                id: 2,
+                question: "小明看到路边的流浪猫受伤了，下列做法中最能体现'敬畏生命'的是？",
+                options: [
+                    "A. 觉得可怜但觉得不是自己的责任",
+                    "B. 通知动物保护组织来救助",
+                    "C. 拍照发朋友圈表达同情",
+                    "D. 立即离开以免惹麻烦"
+                ],
+                correctAnswer: 1,
+                explanation: "通知动物保护组织来救助既体现了对生命的关爱，又采取了实际有效的行动。敬畏生命不仅要有同情心，更要有实际行动来保护和帮助生命。",
+                characterSpeech: "看到生命需要帮助时，采取实际行动才是真正的关爱！"
+            },
+            {
+                id: 3,
+                question: "下列哪种情况最能体现'尊重生命发展的规律'？",
+                options: [
+                    "A. 为了让植物长得更快，每天施肥3次",
+                    "B. 在养殖场给动物注射大量生长激素",
+                    "C. 根据季节变化调整农作物的种植",
+                    "D. 将野生动物长期圈养在家里"
+                ],
+                correctAnswer: 2,
+                explanation: "根据季节变化调整农作物的种植尊重了植物的自然生长规律。尊重生命规律意味着要了解并遵循生命的自然发展过程，而不是过度干预或违背自然规律。",
+                characterSpeech: "尊重生命的规律，就是要顺其自然，不强求，不违背哦！"
+            },
+            {
+                id: 4,
+                question: "关于'生命的脆弱与坚强'，下列说法正确的是？",
+                options: [
+                    "A. 生命只有脆弱的一面，需要完全依赖保护",
+                    "B. 生命只有坚强的一面，不需要任何帮助",
+                    "C. 生命既脆弱需要保护，又坚强能够创造奇迹",
+                    "D. 生命的脆弱和坚强与敬畏生命无关"
+                ],
+                correctAnswer: 2,
+                explanation: "生命具有双重性：一方面很脆弱，容易受到伤害和威胁；另一方面又很坚强，具有顽强的生命力和适应能力。正是这种双重性让我们更应该敬畏生命。",
+                characterSpeech: "生命就像一颗种子，既需要细心呵护，又有破土而出的力量！"
+            },
+            {
+                id: 5,
+                question: "下列行为中，不符合'敬畏生命'原则的是？",
+                options: [
+                    "A. 为受伤的小鸟搭建临时庇护所",
+                    "B. 遵守交通规则保护行人和自己",
+                    "C. 看到欺凌现象时上前制止",
+                    "D. 为了取乐而伤害小动物"
+                ],
+                correctAnswer: 3,
+                explanation: "为了取乐而伤害小动物是直接违背敬畏生命原则的行为。敬畏生命要求我们不仅不能伤害生命，还要主动保护和关爱生命。",
+                characterSpeech: "记住哦，每一个生命都值得尊重，永远不要为了取乐而伤害生命！"
+            }
+        ];
+
+        // DOM元素
+        const questionContainer = document.getElementById('questionContainer');
+        const currentQuestionSpan = document.getElementById('currentQuestion');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const feedbackArea = document.getElementById('feedbackArea');
+        const feedbackTitle = document.getElementById('feedbackTitle');
+        const feedbackContent = document.getElementById('feedbackContent');
+        const characterSpeech = document.getElementById('characterSpeech');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultModal = document.getElementById('resultModal');
+        const resultScore = document.getElementById('resultScore');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultMessage = document.getElementById('resultMessage');
+        const resultDetails = document.getElementById('resultDetails');
+        const retryBtn = document.getElementById('retryBtn');
+        const closeBtn = document.getElementById('closeBtn');
+
+        // 定时器
+        let timerInterval;
+
+        // 初始化考试
+        function initExam() {
+            updateDisplay();
+            loadQuestion(examData.currentQuestionIndex);
+            startTimer();
+        }
+
+        // 加载题目
+        function loadQuestion(index) {
+            const question = questions[index];
+            questionContainer.innerHTML = '';
+            
+            const questionCard = document.createElement('div');
+            questionCard.className = `question-card ${index === examData.currentQuestionIndex ? 'active' : ''}`;
+            questionCard.id = `question-${index}`;
+            
+            let optionsHTML = '';
+            question.options.forEach((option, i) => {
+                const isSelected = examData.answers[index] === i;
+                const optionClass = isSelected ? 'option selected' : 'option';
+                optionsHTML += `
+                    <div class="${optionClass}" data-index="${i}" onclick="selectOption(${i})">
+                        <div class="option-letter">${String.fromCharCode(65 + i)}</div>
+                        <div class="option-text">${option}</div>
+                    </div>
+                `;
+            });
+            
+            questionCard.innerHTML = `
+                <div class="question-number">第 ${index + 1} 题</div>
+                <div class="question-text">${question.question}</div>
+                <div class="options-container">${optionsHTML}</div>
+            `;
+            
+            questionContainer.appendChild(questionCard);
+            
+            // 更新按钮状态
+            updateButtonStates();
+            
+            // 隐藏反馈区域
+            feedbackArea.classList.remove('show');
+        }
+
+        // 选择选项
+        function selectOption(optionIndex) {
+            const currentQuestionIndex = examData.currentQuestionIndex;
+            
+            // 如果已经回答了当前问题，不允许修改（除非是第一次回答）
+            if (examData.answers[currentQuestionIndex] !== undefined && examData.answers[currentQuestionIndex] !== optionIndex) {
+                return;
+            }
+            
+            // 记录答案
+            examData.answers[currentQuestionIndex] = optionIndex;
+            
+            // 更新选项显示
+            const options = document.querySelectorAll(`#question-${currentQuestionIndex} .option`);
+            options.forEach((option, index) => {
+                option.classList.remove('selected');
+                if (index === optionIndex) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            // 如果是第一次回答这个问题，增加已回答问题数
+            if (examData.answers[currentQuestionIndex] !== undefined && examData.questionsAnswered <= currentQuestionIndex) {
+                examData.questionsAnswered++;
+            }
+            
+            // 显示反馈
+            showFeedback();
+            
+            // 更新按钮状态
+            updateButtonStates();
+        }
+
+        // 显示反馈
+        function showFeedback() {
+            const currentQuestionIndex = examData.currentQuestionIndex;
+            const question = questions[currentQuestionIndex];
+            const selectedOption = examData.answers[currentQuestionIndex];
+            
+            if (selectedOption === undefined) return;
+            
+            const isCorrect = selectedOption === question.correctAnswer;
+            const correctOptionLetter = String.fromCharCode(65 + question.correctAnswer);
+            const correctOptionText = question.options[question.correctAnswer];
+            
+            if (isCorrect) {
+                feedbackTitle.innerHTML = '✅ 回答正确！';
+                feedbackTitle.style.color = '#2e7d32';
+            } else {
+                feedbackTitle.innerHTML = '❌ 回答错误';
+                feedbackTitle.style.color = '#f44336';
+            }
+            
+            feedbackContent.innerHTML = `
+                <p>${isCorrect ? '太棒了！你的理解完全正确！' : '别灰心，让我们来看看正确答案和解析：'}</p>
+                <div class="correct-answer">
+                    <strong>正确答案：${correctOptionLetter}. ${correctOptionText.split('. ')[1]}</strong><br><br>
+                    <strong>知识点解析：</strong><br>
+                    ${question.explanation}
+                </div>
+            `;
+            
+            characterSpeech.textContent = question.characterSpeech;
+            
+            // 显示反馈区域
+            feedbackArea.classList.add('show');
+            
+            // 标记正确和错误选项
+            const options = document.querySelectorAll(`#question-${currentQuestionIndex} .option`);
+            options.forEach((option, index) => {
+                if (index === question.correctAnswer) {
+                    option.classList.add('correct');
+                } else if (index === selectedOption && !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // 自动滚动到反馈区域
+            setTimeout(() => {
+                feedbackArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 300);
+        }
+
+        // 更新按钮状态
+        function updateButtonStates() {
+            // 上一题按钮
+            prevBtn.disabled = examData.currentQuestionIndex === 0;
+            
+            // 下一题按钮
+            const hasAnswered = examData.answers[examData.currentQuestionIndex] !== undefined;
+            nextBtn.disabled = !hasAnswered;
+            
+            // 如果是最后一题且已回答，显示提交按钮
+            if (examData.currentQuestionIndex === examData.totalQuestions - 1 && hasAnswered) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        // 下一题
+        function nextQuestion() {
+            if (examData.currentQuestionIndex < examData.totalQuestions - 1) {
+                examData.currentQuestionIndex++;
+                loadQuestion(examData.currentQuestionIndex);
+                updateDisplay();
+            }
+        }
+
+        // 上一题
+        function previousQuestion() {
+            if (examData.currentQuestionIndex > 0) {
+                examData.currentQuestionIndex--;
+                loadQuestion(examData.currentQuestionIndex);
+                updateDisplay();
+            }
+        }
+
+        // 更新显示
+        function updateDisplay() {
+            currentQuestionSpan.textContent = examData.currentQuestionIndex + 1;
+            scoreDisplay.textContent = examData.score;
+        }
+
+        // 开始计时器
+        function startTimer() {
+            clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                examData.timeLeft--;
+                
+                const minutes = Math.floor(examData.timeLeft / 60);
+                const seconds = examData.timeLeft % 60;
+                timeDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                
+                if (examData.timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitExam();
+                }
+                
+                // 时间少于1分钟时变红色
+                if (examData.timeLeft < 60) {
+                    timeDisplay.style.color = '#f44336';
+                }
+            }, 1000);
+        }
+
+        // 提交考试
+        function submitExam() {
+            clearInterval(timerInterval);
+            
+            // 计算分数
+            let correctCount = 0;
+            for (let i = 0; i < questions.length; i++) {
+                if (examData.answers[i] === questions[i].correctAnswer) {
+                    correctCount++;
+                }
+            }
+            
+            examData.score = Math.round((correctCount / questions.length) * 100);
+            
+            // 显示结果
+            showResult();
+        }
+
+        // 显示结果
+        function showResult() {
+            const score = examData.score;
+            const isPass = score >= 60;
+            
+            resultScore.textContent = score;
+            resultScore.className = `result-score ${isPass ? 'result-pass' : 'result-fail'}`;
+            
+            if (isPass) {
+                resultTitle.textContent = '🎉 恭喜你通过测试！';
+                resultMessage.textContent = getPassMessage(score);
+            } else {
+                resultTitle.textContent = '😔 需要继续努力';
+                resultMessage.textContent = getFailMessage(score);
+            }
+            
+            // 显示详细结果
+            let detailsHTML = '<strong>答题详情：</strong><br>';
+            for (let i = 0; i < questions.length; i++) {
+                const isCorrect = examData.answers[i] === questions[i].correctAnswer;
+                detailsHTML += `第${i + 1}题：${isCorrect ? '✅' : '❌'}<br>`;
+            }
+            
+            resultDetails.innerHTML = detailsHTML;
+            
+            // 显示弹窗
+            resultModal.style.display = 'flex';
+        }
+
+        // 获取通过消息
+        function getPassMessage(score) {
+            if (score >= 90) {
+                return '太棒了！你对"敬畏生命"的理解非常深刻，完全掌握了本课的重点知识！';
+            } else if (score >= 80) {
+                return '做得很好！你对敬畏生命的理解比较全面，继续保持！';
+            } else if (score >= 70) {
+                return '不错！你基本掌握了敬畏生命的重要知识点，可以再回顾一下细节。';
+            } else {
+                return '通过！你对敬畏生命有基本的理解，建议再巩固一下相关知识。';
+            }
+        }
+
+        // 获取未通过消息
+        function getFailMessage(score) {
+            return `你的得分是${score}分，低于60分合格线。建议重新学习本课内容，特别是"为什么要敬畏生命"和"怎样敬畏生命"两个核心问题，然后再来测试。`;
+        }
+
+        // 重新测试
+        function retryExam() {
+            // 重置数据
+            examData.currentQuestionIndex = 0;
+            examData.score = 0;
+            examData.timeLeft = 300;
+            examData.answers = {};
+            examData.questionsAnswered = 0;
+            
+            // 关闭弹窗
+            resultModal.style.display = 'none';
+            
+            // 重新初始化
+            initExam();
+            timeDisplay.style.color = '';
+        }
+
+        // 关闭弹窗
+        function closeResult() {
+            resultModal.style.display = 'none';
+        }
+
+        // 全局函数
+        window.selectOption = selectOption;
+
+        // 事件监听
+        nextBtn.addEventListener('click', nextQuestion);
+        prevBtn.addEventListener('click', previousQuestion);
+        submitBtn.addEventListener('click', submitExam);
+        retryBtn.addEventListener('click', retryExam);
+        closeBtn.addEventListener('click', closeResult);
+
+        // 页面加载时初始化
+        window.addEventListener('load', function() {
+            // 页面加载动画
+            const container = document.querySelector('.container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // 初始化考试
+            initExam();
+        });
+
+        // 禁止右键菜单和复制（可选）
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            alert('考试期间禁止复制内容！');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>回顾复习 - 人的生命特点</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<script src="js/vue.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+		integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous">
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"
+		integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous">
+	</script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+		integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #e0f7e9 0%, #a5d6a7 100%);
+            min-height: 100vh;
+            color: #2e7d32;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* 卡通装饰 */
+        .decoration {
+            position: absolute;
+            z-index: 1;
+        }
+        
+        .tree {
+            width: 100px;
+            height: 120px;
+            background: #388e3c;
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        
+        .tree:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: #5d4037;
+            bottom: -40px;
+            left: 40px;
+        }
+        
+        .cloud {
+            width: 120px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        .cloud:before, .cloud:after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+        }
+        
+        .cloud:before {
+            width: 40px;
+            height: 40px;
+            top: -20px;
+            left: 20px;
+        }
+        
+        .cloud:after {
+            width: 60px;
+            height: 60px;
+            top: -30px;
+            right: 20px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(46, 125, 50, 0.15);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px dashed #81c784;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            color: #1b5e20;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(129, 199, 132, 0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+        
+        .learning-objective {
+            background: #f1f8e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .learning-objective h2 {
+            color: #388e3c;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .learning-objective h2:before {
+            content: '🎯';
+        }
+        
+        .question-container {
+            margin-bottom: 40px;
+        }
+        
+        .question {
+            font-size: 1.3rem;
+            color: #1b5e20;
+            margin-bottom: 25px;
+            font-weight: 600;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 10px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #c8e6c9;
+            border-radius: 12px;
+            padding: 18px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+            border-color: #4caf50;
+        }
+        
+        .option.selected {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+        
+        .option.correct {
+            background: #c8e6c9;
+            border-color: #2e7d32;
+            animation: pulse 0.5s;
+        }
+        
+        .option.incorrect {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+        
+        .option-number {
+            width: 36px;
+            height: 36px;
+            background: #4caf50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .feedback {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .feedback.correct {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            display: block;
+        }
+        
+        .feedback.incorrect {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            display: block;
+        }
+        
+        .feedback-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feedback-title.correct {
+            color: #2e7d32;
+        }
+        
+        .feedback-title.incorrect {
+            color: #d32f2f;
+        }
+        
+        .correct-answer {
+            background: #f1f8e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .character {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f1f8e9;
+            border-radius: 15px;
+        }
+        
+        .character-img {
+            width: 80px;
+            height: 80px;
+            background: #4caf50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+        
+        .character-speech {
+            flex: 1;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            position: relative;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #c8e6c9;
+        }
+        
+        .character-speech:before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 8px solid transparent;
+            border-right-color: #c8e6c9;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 20px;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-back {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+        
+        .btn-back:hover {
+            background: #4caf50;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-next {
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            color: white;
+        }
+        
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.4);
+            background: linear-gradient(45deg, #2e7d32, #4caf50);
+        }
+        
+        .progress-container {
+            margin-bottom: 30px;
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #81c784, #4caf50);
+            width: 20%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            color: #666;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .character {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .character-speech:before {
+                left: 50%;
+                top: -15px;
+                transform: translateX(-50%);
+                border-right-color: transparent;
+                border-bottom-color: #c8e6c9;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 卡通装饰 -->
+    <div class="decoration tree"></div>
+    <div class="decoration cloud"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🌱 回顾复习：人的生命特点</h1>
+            <p class="subtitle">检验上节课知识点的掌握情况</p>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span>复习进度</span>
+                <span id="progressText">1/5</span>
+            </div>
+        </div>
+        
+        <div class="learning-objective">
+            <h2>学习目标回顾</h2>
+            <p>理解并掌握人的生命具有的六个特点：独特性、不可逆性、有限性、代际接续性、精神传承性以及作为自然奇迹的珍贵性。</p>
+        </div>
+        
+        <div class="question-container">
+            <div class="question" id="questionText">
+                问题1：下列哪一项最能体现"每个人的生命都是独特的"这一特点？
+            </div>
+            
+            <div class="options" id="optionsContainer">
+                <div class="option" data-index="0">
+                    <div class="option-number">A</div>
+                    <div class="option-text">每个人都会经历生老病死的过程</div>
+                </div>
+                <div class="option" data-index="1">
+                    <div class="option-number">B</div>
+                    <div class="option-text">每个人都有不同的外貌、性格、天赋和生活经历</div>
+                </div>
+                <div class="option" data-index="2">
+                    <div class="option-number">C</div>
+                    <div class="option-text">人的生命只有一次，无法重新来过</div>
+                </div>
+                <div class="option" data-index="3">
+                    <div class="option-number">D</div>
+                    <div class="option-text">人类的文化和精神财富可以代代相传</div>
+                </div>
+            </div>
+            
+            <div class="feedback" id="feedbackContainer">
+                <div class="feedback-title correct" id="feedbackTitle">
+                    <span>✅ 回答正确！</span>
+                </div>
+                <div class="feedback-content" id="feedbackContent">
+                    <p>太棒了！你完全理解了"生命独特性"的含义。</p>
+                    <div class="correct-answer">
+                        <strong>知识点回顾：</strong><br>
+                        每个人的生命都是独特的，体现在不同的外貌特征、性格特点、天赋才能、生活经历和价值观等方面。正是这种独特性构成了丰富多彩的人类社会。
+                    </div>
+                    
+                    <div class="character">
+                        <div class="character-img">🌱</div>
+                        <div class="character-speech" id="characterSpeech">
+                            真厉害！你准确地找到了正确答案！记住哦，就像世界上没有两片完全相同的叶子，也没有两个完全相同的人，这就是生命的独特之美！
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="choics.html" class="btn btn-back">← 返回选择页面</a>
+            <button class="btn btn-next" id="nextQuestion">下一题 →</button>
+        </div>
+    </div>
+
+    <script>
+        // 题库数据
+        const questions = [
+            {
+                question: "问题1：下列哪一项最能体现'每个人的生命都是独特的'这一特点？",
+                options: [
+                    "每个人都会经历生老病死的过程",
+                    "每个人都有不同的外貌、性格、天赋和生活经历",
+                    "人的生命只有一次，无法重新来过",
+                    "人类的文化和精神财富可以代代相传"
+                ],
+                correctAnswer: 1,
+                explanation: "每个人的生命都是独特的，体现在不同的外貌特征、性格特点、天赋才能、生活经历和价值观等方面。",
+                characterSpeech: "真厉害！你准确地找到了正确答案！记住哦，就像世界上没有两片完全相同的叶子，也没有两个完全相同的人，这就是生命的独特之美！"
+            },
+            {
+                question: "问题2：'人的生命是不可逆的'这句话最准确的意思是？",
+                options: [
+                    "人的生命可以重新开始",
+                    "生命只有一次，不能倒流或重来",
+                    "生命可以无限延长",
+                    "生命可以随意改变"
+                ],
+                correctAnswer: 1,
+                explanation: "人的生命是不可逆的，意味着时间不会倒流，过去的每一刻都无法重新经历，因此我们要珍惜当下的每一刻。",
+                characterSpeech: "回答正确！生命就像一条单行线，只能向前不能后退。所以我们要珍惜每一分每一秒哦！🌞"
+            },
+            {
+                question: "问题3：下列哪项体现了'人的精神生命是不断传承的'？",
+                options: [
+                    "人的寿命是有限的",
+                    "科学知识、文化艺术、道德观念代代相传",
+                    "每个人的指纹都不同",
+                    "生命不会重来"
+                ],
+                correctAnswer: 1,
+                explanation: "人的精神生命通过科学发现、文化艺术、思想观念、道德规范等形式不断传承和发展，超越了肉体生命的限制。",
+                characterSpeech: "太棒了！你理解了精神传承的意义！就像伟大的思想家的智慧至今仍在影响我们一样！💡"
+            },
+            {
+                question: "问题4：'人的生命是代代接续的'指的是什么？",
+                options: [
+                    "每个人的生命都是独立的",
+                    "人类通过生育繁衍，生命在代际间延续",
+                    "生命只有一次机会",
+                    "精神财富可以传承"
+                ],
+                correctAnswer: 1,
+                explanation: "人的生命通过生育和繁衍，实现了代际间的延续，形成了家庭、家族乃至整个人类的生命链条。",
+                characterSpeech: "完全正确！就像接力赛一样，生命也是一代传一代，这就是生命的延续之美！🏃‍♂️"
+            },
+            {
+                question: "问题5：为什么说'人的生命是大自然的奇迹，是地球上最为珍贵的财富'？",
+                options: [
+                    "因为人类是地球上唯一的生物",
+                    "因为人类拥有自我意识、创造力和改变世界的能力",
+                    "因为人类的寿命最长",
+                    "因为人类不会死亡"
+                ],
+                correctAnswer: 1,
+                explanation: "人类拥有自我意识、理性思维、创造能力、情感体验和改变世界的能力，这些特质使人的生命成为自然界的奇迹和宝贵财富。",
+                characterSpeech: "完美！你真正理解了生命的珍贵性！每个生命都是奇迹，都值得被尊重和珍惜！✨"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let selectedOption = null;
+        const feedbackContainer = document.getElementById('feedbackContainer');
+        const feedbackTitle = document.getElementById('feedbackTitle');
+        const feedbackContent = document.getElementById('feedbackContent');
+        const characterSpeech = document.getElementById('characterSpeech');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const nextQuestionBtn = document.getElementById('nextQuestion');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+
+        // 初始化第一题
+        loadQuestion(currentQuestion);
+
+        // 加载题目
+        function loadQuestion(index) {
+            const q = questions[index];
+            questionText.textContent = q.question;
+            
+            // 更新进度
+            progressFill.style.width = `${((index + 1) / questions.length) * 100}%`;
+            progressText.textContent = `${index + 1}/${questions.length}`;
+            
+            // 清空选项容器
+            optionsContainer.innerHTML = '';
+            selectedOption = null;
+            
+            // 添加选项
+            q.options.forEach((option, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.setAttribute('data-index', i);
+                optionDiv.innerHTML = `
+                    <div class="option-number">${String.fromCharCode(65 + i)}</div>
+                    <div class="option-text">${option}</div>
+                `;
+                
+                optionDiv.addEventListener('click', () => selectOption(i, optionDiv));
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // 隐藏反馈区域
+            feedbackContainer.style.display = 'none';
+            feedbackContainer.className = 'feedback';
+            
+            // 更新下一题按钮文本
+            if (index === questions.length - 1) {
+                nextQuestionBtn.textContent = '完成复习 →';
+            } else {
+                nextQuestionBtn.textContent = '下一题 →';
+            }
+        }
+
+        // 选择选项
+        function selectOption(index, element) {
+            // 如果已经选择了，不再重复处理
+            if (selectedOption !== null) return;
+            
+            selectedOption = index;
+            
+            // 移除其他选项的选择状态
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // 添加当前选项的选择状态
+            element.classList.add('selected');
+            
+            // 显示反馈
+            const q = questions[currentQuestion];
+            const isCorrect = index === q.correctAnswer;
+            
+            if (isCorrect) {
+                feedbackContainer.className = 'feedback correct';
+                feedbackTitle.innerHTML = '<span>✅ 回答正确！</span>';
+                feedbackTitle.className = 'feedback-title correct';
+                feedbackContent.innerHTML = `
+                    <p>太棒了！你完全理解了！</p>
+                    <div class="correct-answer">
+                        <strong>知识点回顾：</strong><br>
+                        ${q.explanation}
+                    </div>
+                `;
+                characterSpeech.textContent = q.characterSpeech;
+                
+                // 标记正确选项
+                element.classList.add('correct');
+            } else {
+                feedbackContainer.className = 'feedback incorrect';
+                feedbackTitle.innerHTML = '<span>❌ 再想想看</span>';
+                feedbackTitle.className = 'feedback-title incorrect';
+                
+                // 显示正确答案
+                const correctOptionText = q.options[q.correctAnswer];
+                const correctOptionLetter = String.fromCharCode(65 + q.correctAnswer);
+                
+                feedbackContent.innerHTML = `
+                    <p>别灰心，我们再复习一下这个知识点</p>
+                    <div class="correct-answer">
+                        <strong>正确答案：${correctOptionLetter}. ${correctOptionText}</strong><br>
+                        <strong>知识点回顾：</strong><br>
+                        ${q.explanation}
+                    </div>
+                `;
+                characterSpeech.textContent = "没关系，学习就是在不断尝试中进步的！让我们记住这个知识点，下次一定行！💪";
+                
+                // 标记错误和正确选项
+                element.classList.add('incorrect');
+                document.querySelector(`.option[data-index="${q.correctAnswer}"]`).classList.add('correct');
+            }
+            
+            feedbackContainer.style.display = 'block';
+        }
+
+        // 下一题按钮点击事件
+        nextQuestionBtn.addEventListener('click', () => {
+            if (selectedOption === null) {
+                alert('请先选择一个答案！');
+                return;
+            }
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion(currentQuestion);
+            } else {
+                // 完成所有题目
+                const score = calculateScore();
+                showCompletionScreen(score);
+            }
+        });
+
+        // 计算得分
+        function calculateScore() {
+            // 在实际应用中，这里会统计用户的实际得分
+            // 现在我们先返回一个示例得分
+            return Math.floor(Math.random() * 30) + 70; // 随机生成70-100分
+        }
+
+        // 显示完成屏幕
+        function showCompletionScreen(score) {
+            questionText.textContent = '🎉 恭喜完成复习！';
+            optionsContainer.style.display = 'none';
+            feedbackContainer.style.display = 'none';
+            
+            const completionHTML = `
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🎯</div>
+                    <h2 style="color: #2e7d32; margin-bottom: 20px;">复习完成！</h2>
+                    <div style="font-size: 3rem; color: #4caf50; margin: 20px 0;">${score}分</div>
+                    <p style="font-size: 1.2rem; margin-bottom: 30px;">你已经掌握了人的生命特点的核心知识点！</p>
+                    
+                    <div style="background: #f1f8e9; padding: 25px; border-radius: 15px; margin: 30px 0; text-align: left;">
+                        <h3 style="color: #388e3c; margin-bottom: 15px;">📚 人的生命特点总结：</h3>
+                        <ol style="line-height: 2; margin-left: 20px;">
+                            <li><strong>独特性：</strong>每个人都有不同的外貌、性格、天赋和生活经历</li>
+                            <li><strong>不可逆性：</strong>生命只有一次，不能倒流或重来</li>
+                            <li><strong>有限性：</strong>每个人的生命都是有限的</li>
+                            <li><strong>代际接续性：</strong>人的生命是代代接续的</li>
+                            <li><strong>精神传承性：</strong>人的精神生命是不断传承的</li>
+                            <li><strong>珍贵性：</strong>人的生命是大自然的奇迹，是地球上最为珍贵的财富</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="character" style="margin-top: 30px;">
+                        <div class="character-img">🎓</div>
+                        <div class="character-speech">
+                            太棒了！你已经掌握了人的生命特点的六个核心要点。记住这些知识点，不仅能帮助你学习，更能让你更加珍惜生命、热爱生活！继续保持学习的热情哦！💚
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            questionText.insertAdjacentHTML('afterend', completionHTML);
+            nextQuestionBtn.textContent = '重新开始复习';
+            nextQuestionBtn.onclick = () => location.reload();
+        }
+    </script>
+</body>
+</html>

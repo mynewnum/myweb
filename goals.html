@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>学习目标 - 敬畏生命</title>
+	<script src="js/vue.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+		integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous">
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"
+		integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous">
+	</script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+		integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #e0f7e9 0%, #a5d6a7 100%);
+            min-height: 100vh;
+            color: #2e7d32;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* 背景装饰 - 与review页面完全一致 */
+        .decoration {
+            position: absolute;
+            z-index: 1;
+        }
+        
+        .tree {
+            width: 100px;
+            height: 120px;
+            background: #388e3c;
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        
+        .tree:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: #5d4037;
+            bottom: -40px;
+            left: 40px;
+        }
+        
+        .cloud {
+            width: 120px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        .cloud:before, .cloud:after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+        }
+        
+        .cloud:before {
+            width: 40px;
+            height: 40px;
+            top: -20px;
+            left: 20px;
+        }
+        
+        .cloud:after {
+            width: 60px;
+            height: 60px;
+            top: -30px;
+            right: 20px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 30px rgba(46, 125, 50, 0.15);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1b5e20;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 0px rgba(129, 199, 132, 0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #4caf50;
+        }
+        
+        /* 学习目标列表 */
+        .objectives-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(232, 245, 233, 0.5);
+            border-radius: 15px;
+            border-left: 4px solid #4caf50;
+            transition: transform 0.3s ease;
+        }
+        
+        .objective-item:hover {
+            transform: translateX(10px);
+            background: rgba(232, 245, 233, 0.8);
+        }
+        
+        .objective-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+        }
+        
+        .objective-content {
+            flex: 1;
+        }
+        
+        .objective-content h3 {
+            color: #2e7d32;
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+        
+        .objective-content p {
+            color: #424242;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        
+        /* 返回按钮 */
+        .back-button-container {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #81c784;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+            background: linear-gradient(45deg, #2e7d32, #4caf50);
+        }
+        
+        .back-button:active {
+            transform: translateY(0);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+                margin: 30px auto;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .objective-item {
+                padding: 15px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .objective-item:hover {
+                transform: translateY(-5px);
+            }
+            
+            .objective-content h3 {
+                font-size: 1.2rem;
+            }
+            
+            .objective-content p {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tree, .cloud {
+                display: none;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰 -->
+    <div class="decoration tree"></div>
+    <div class="decoration cloud"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>📚 学习目标</h1>
+            <p class="subtitle">明确本课学习方向，开启"敬畏生命"之旅</p>
+        </div>
+        
+        <div class="objectives-list">
+            <!-- 目标一 -->
+            <div class="objective-item">
+                <div class="objective-number">1</div>
+                <div class="objective-content">
+                    <h3>认知生命的本质</h3>
+                    <p>了解生命的脆弱与艰难，懂得生命的坚强、崇高与神圣，认识到每个生命的独特价值。</p>
+                </div>
+            </div>
+            
+            <!-- 目标二 -->
+            <div class="objective-item">
+                <div class="objective-number">2</div>
+                <div class="objective-content">
+                    <h3>学习尊重与关爱生命</h3>
+                    <p>通过生活观察、探究与分享等活动，学会尊重并遵循生命存在和发展的规律，学会关爱他人的生命。</p>
+                </div>
+            </div>
+            
+            <!-- 目标三 -->
+            <div class="objective-item">
+                <div class="objective-number">3</div>
+                <div class="objective-content">
+                    <h3>培养珍爱生命的情感</h3>
+                    <p>认识到生命至上、生命最宝贵，从内心培养敬畏生命、珍爱生命的情感，树立正确的生命价值观。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="back-button-container">
+            <a href="choics.html" class="back-button">
+                ← 返回选择页面
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // 简单的页面加载动画
+        window.addEventListener('load', function() {
+            const container = document.querySelector('.container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // 为每个目标项添加延迟显示动画
+            const items = document.querySelectorAll('.objective-item');
+            items.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+                
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, 300 + (index * 200));
+            });
+        });
+    </script>
+</body>
+</html>

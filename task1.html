@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务一：为什么要敬畏生命</title>
+	<script src="js/vue.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+		integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous">
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"
+		integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous">
+	</script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+		integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #e0f7e9 0%, #a5d6a7 100%);
+            min-height: 100vh;
+            color: #2e7d32;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* 背景装饰 - 与review页面完全一致 */
+        .decoration {
+            position: absolute;
+            z-index: 1;
+        }
+        
+        .tree {
+            width: 100px;
+            height: 120px;
+            background: #388e3c;
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        
+        .tree:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: #5d4037;
+            bottom: -40px;
+            left: 40px;
+        }
+        
+        .cloud {
+            width: 120px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        .cloud:before, .cloud:after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+        }
+        
+        .cloud:before {
+            width: 40px;
+            height: 40px;
+            top: -20px;
+            left: 20px;
+        }
+        
+        .cloud:after {
+            width: 60px;
+            height: 60px;
+            top: -30px;
+            right: 20px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* 添加小鸟动画 */
+        .bird {
+            position: absolute;
+            top: 150px;
+            right: 10%;
+            font-size: 30px;
+            animation: fly 10s linear infinite;
+        }
+        
+        @keyframes fly {
+            0% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-50px) translateY(-20px); }
+            50% { transform: translateX(-100px) translateY(0); }
+            75% { transform: translateX(-150px) translateY(20px); }
+            100% { transform: translateX(-200px) translateY(0); }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(46, 125, 50, 0.15);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px dashed #81c784;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1b5e20;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(129, 199, 132, 0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #4caf50;
+        }
+        
+        /* 情境故事部分 */
+        .story-section {
+            margin-bottom: 40px;
+        }
+        
+        .story-card {
+            background: #f1f8e9;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #4caf50;
+        }
+        
+        .story-card h2 {
+            color: #388e3c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .story-card h2:before {
+            content: '📖';
+        }
+        
+        .story-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #424242;
+            margin-bottom: 20px;
+        }
+        
+        /* 观察与发现部分 */
+        .observation-section {
+            margin-bottom: 40px;
+        }
+        
+        .observation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .observation-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.1);
+            border: 2px solid #c8e6c9;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .observation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.2);
+        }
+        
+        .observation-card.weakness {
+            border-color: #ff9800;
+        }
+        
+        .observation-card.strength {
+            border-color: #2196f3;
+        }
+        
+        .observation-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .weakness .observation-icon {
+            background: linear-gradient(135deg, #ff9800, #ff5722);
+            color: white;
+        }
+        
+        .strength .observation-icon {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+        }
+        
+        .observation-card h3 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .observation-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .observation-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #424242;
+        }
+        
+        .weakness .observation-list li:before {
+            content: '🌱';
+            position: absolute;
+            left: 0;
+        }
+        
+        .strength .observation-list li:before {
+            content: '💪';
+            position: absolute;
+            left: 0;
+        }
+        
+        /* 互动感悟部分 */
+        .reflection-section {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 2px solid #81c784;
+        }
+        
+        .reflection-section h2 {
+            color: #1b5e20;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .thoughts-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            margin-bottom: 20px;
+            resize: vertical;
+            background: white;
+        }
+        
+        .thoughts-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+        
+        .share-button {
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .share-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.4);
+        }
+        
+        /* 任务总结 */
+        .summary-section {
+            background: #f1f8e9;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-section h2 {
+            color: #388e3c;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .summary-points {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .summary-point {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .summary-point h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* 返回按钮 */
+        .back-button-container {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #81c784;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .observation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-points {
+                grid-template-columns: 1fr;
+            }
+            
+            .bird {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tree, .cloud {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰 -->
+    <div class="decoration tree"></div>
+    <div class="decoration cloud"></div>
+    <div class="decoration bird">🐦</div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>📝 学习任务一</h1>
+            <p class="subtitle">探索：为什么要敬畏生命？</p>
+        </div>
+        
+        <!-- 情境故事 -->
+        <div class="story-section">
+            <div class="story-card">
+                <h2>情境故事：种子的一生</h2>
+                <div class="story-content">
+                    <p>想象你是一颗小小的种子，刚刚被埋入土中...</p>
+                    <p>🌧️ 第一周：一场暴雨几乎将你冲出泥土，但你用微弱的根须紧紧抓住大地。</p>
+                    <p>🌱 第二周：你努力向上生长，却遇到了坚硬的石块，你选择绕道而行。</p>
+                    <p>🌞 第三周：阳光温暖，你终于破土而出，看到这个世界的第一缕光。</p>
+                    <p>🍃 一个月后：你长出了第一片叶子，一只蜗牛却爬过来想要吃掉你...</p>
+                    <p>🌳 一年后：你已成为一棵小树，为鸟儿提供栖息，为大地增添绿色。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 观察与发现 -->
+        <div class="observation-section">
+            <h2 style="color: #2e7d32; margin-bottom: 20px;">🔍 观察与发现</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #424242;">通过种子的故事，你观察到了什么？</p>
+            
+            <div class="observation-grid">
+                <!-- 生命脆弱的一面 -->
+                <div class="observation-card weakness">
+                    <div class="observation-icon">🫣</div>
+                    <h3>生命的脆弱与艰难</h3>
+                    <ul class="observation-list">
+                        <li>暴雨可能冲走种子</li>
+                        <li>坚硬石块阻挡生长</li>
+                        <li>蜗牛等天敌的威胁</li>
+                        <li>缺乏水分和阳光时会枯萎</li>
+                        <li>环境变化带来的挑战</li>
+                    </ul>
+                </div>
+                
+                <!-- 生命坚强的一面 -->
+                <div class="observation-card strength">
+                    <div class="observation-icon">✨</div>
+                    <h3>生命的坚强与神圣</h3>
+                    <ul class="observation-list">
+                        <li>用根须紧紧抓住大地</li>
+                        <li>绕开石块继续生长</li>
+                        <li>破土而出的生命奇迹</li>
+                        <li>为其他生命提供帮助</li>
+                        <li>创造美丽的绿色世界</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 互动感悟 -->
+        <div class="reflection-section">
+            <h2>💭 我的感悟</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #424242;">写下你对"为什么要敬畏生命"的理解：</p>
+            
+            <textarea class="thoughts-input" placeholder="在这里写下你的感悟...比如：通过种子的故事，我明白了生命既脆弱又坚强..."></textarea>
+            
+            <button class="share-button" onclick="shareThoughts()">分享我的感悟</button>
+        </div>
+        
+        <!-- 任务总结 -->
+        <div class="summary-section">
+            <h2>📋 任务一总结：敬畏生命的原因</h2>
+            <div class="summary-points">
+                <div class="summary-point">
+                    <h4>🌱 原因一：生命是脆弱的、艰难的</h4>
+                    <p>生命容易受到伤害，面临各种挑战和困难</p>
+                </div>
+                <div class="summary-point">
+                    <h4>✨ 原因二：生命是坚强的、崇高的、神圣的</h4>
+                    <p>生命具有顽强意志，能够创造奇迹，值得尊重</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 返回按钮 -->
+        <div class="back-button-container">
+            <a href="choics.html" class="back-button">
+                ← 返回选择页面
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载动画
+        window.addEventListener('load', function() {
+            const container = document.querySelector('.container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // 观察卡片动画
+            const cards = document.querySelectorAll('.observation-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 500 + (index * 200));
+            });
+        });
+        
+        // 分享感悟功能
+        function shareThoughts() {
+            const thoughtsInput = document.querySelector('.thoughts-input');
+            const thoughts = thoughtsInput.value.trim();
+            
+            if (thoughts === '') {
+                alert('请先写下你的感悟再分享哦！');
+                thoughtsInput.focus();
+                return;
+            }
+            
+            // 模拟分享效果
+            const shareButton = document.querySelector('.share-button');
+            const originalText = shareButton.textContent;
+            
+            shareButton.textContent = '分享中...';
+            shareButton.disabled = true;
+            
+            // 模拟网络请求
+            setTimeout(() => {
+                // 显示成功提示
+                alert('✨ 感悟分享成功！\n\n你的感悟："' + thoughts.substring(0, 50) + '..."\n\n已经保存到你的学习记录中。');
+                
+                // 恢复按钮状态
+                shareButton.textContent = originalText;
+                shareButton.disabled = false;
+                
+                // 可选：清空输入框
+                // thoughtsInput.value = '';
+                
+                // 添加动画效果
+                shareButton.style.background = 'linear-gradient(45deg, #81c784, #4caf50)';
+                setTimeout(() => {
+                    shareButton.style.background = 'linear-gradient(45deg, #4caf50, #2e7d32)';
+                }, 500);
+                
+                // 保存到本地存储（可选）
+                try {
+                    localStorage.setItem('task1_thoughts', thoughts);
+                    console.log('感悟已保存到本地存储');
+                } catch (e) {
+                    console.log('无法保存到本地存储');
+                }
+            }, 1000);
+        }
+        
+        // 为观察卡片添加点击效果
+        document.querySelectorAll('.observation-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+        
+        // 自动加载上次的感悟（可选功能）
+        window.addEventListener('load', function() {
+            try {
+                const savedThoughts = localStorage.getItem('task1_thoughts');
+                if (savedThoughts) {
+                    const thoughtsInput = document.querySelector('.thoughts-input');
+                    thoughtsInput.value = savedThoughts;
+                    console.log('已加载上次保存的感悟');
+                }
+            } catch (e) {
+                console.log('无法读取本地存储');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课堂总结 - 敬畏生命</title>
+	<script src="js/vue.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+		integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous">
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"
+		integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous">
+	</script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+		integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #e0f7e9 0%, #a5d6a7 100%);
+            min-height: 100vh;
+            color: #2e7d32;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景装饰 - 与review页面完全一致 */
+        .decoration {
+            position: absolute;
+            z-index: 1;
+        }
+        
+        .tree-left {
+            width: 100px;
+            height: 120px;
+            background: #388e3c;
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        
+        .tree-left:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: #5d4037;
+            bottom: -40px;
+            left: 40px;
+        }
+        
+        .tree-right {
+            width: 80px;
+            height: 100px;
+            background: #4caf50;
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            bottom: 40px;
+            right: 30px;
+        }
+        
+        .tree-right:after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 30px;
+            background: #5d4037;
+            bottom: -30px;
+            left: 32px;
+        }
+        
+        .cloud {
+            width: 120px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        .cloud:before, .cloud:after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+        }
+        
+        .cloud:before {
+            width: 40px;
+            height: 40px;
+            top: -20px;
+            left: 20px;
+        }
+        
+        .cloud:after {
+            width: 60px;
+            height: 60px;
+            top: -30px;
+            right: 20px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* 庆祝特效容器 */
+        .celebration-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            overflow: hidden;
+        }
+        
+        /* 庆祝元素 */
+        .celebration-item {
+            position: absolute;
+            font-size: 2rem;
+            animation: celebrationFall linear forwards;
+        }
+        
+        @keyframes celebrationFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* 卡通形象 */
+        .cartoon-character {
+            position: absolute;
+            font-size: 60px;
+            z-index: 2;
+            animation: characterFloat 4s infinite ease-in-out;
+        }
+        
+        .character-1 {
+            top: 30%;
+            left: 10%;
+        }
+        
+        .character-2 {
+            top: 50%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+        
+        .character-3 {
+            bottom: 20%;
+            left: 20%;
+            font-size: 50px;
+            animation-delay: 2s;
+        }
+        
+        @keyframes characterFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(46, 125, 50, 0.15);
+            backdrop-filter: blur(5px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 3px dashed #81c784;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            color: #1b5e20;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 0px rgba(129, 199, 132, 0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.3rem;
+            color: #4caf50;
+            font-weight: 500;
+        }
+        
+        /* 完成徽章 */
+        .completion-badge {
+            position: absolute;
+            top: -20px;
+            right: 50px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #ffd700, #ff9800);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+            animation: badgeSpin 8s infinite linear;
+        }
+        
+        @keyframes badgeSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 重点知识卡片 */
+        .knowledge-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .knowledge-card {
+            background: linear-gradient(145deg, #f8fdf8, #ffffff);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
+            border: 2px solid #c8e6c9;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .knowledge-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.25);
+            border-color: #4caf50;
+        }
+        
+        .knowledge-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #4caf50, #2e7d32);
+        }
+        
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #81c784, #4caf50);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .knowledge-card h3 {
+            color: #1b5e20;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f5e9;
+        }
+        
+        .knowledge-points {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .knowledge-points li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #424242;
+            line-height: 1.6;
+        }
+        
+        .knowledge-points li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        /* 学习收获 */
+        .learning-gains {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            border: 3px solid #81c784;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .learning-gains:before {
+            content: '✨';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            font-size: 8rem;
+            opacity: 0.1;
+        }
+        
+        .learning-gains h2 {
+            color: #1b5e20;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 2rem;
+        }
+        
+        .gains-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .gain-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .gain-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .gain-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .gain-item h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        
+        /* 心灵寄语 */
+        .inspiration-box {
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(46, 125, 50, 0.3);
+        }
+        
+        .inspiration-box:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+        }
+        
+        @keyframes moveBackground {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .inspiration-box h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .inspiration-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 庆祝按钮 */
+        .celebration-btn {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff9800, #ff5722);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+        }
+        
+        .celebration-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(255, 152, 0, 0.6);
+        }
+        
+        /* 返回按钮 */
+        .back-button-container {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #81c784;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .knowledge-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .completion-badge {
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+                right: 20px;
+            }
+            
+            .cartoon-character {
+                font-size: 40px;
+            }
+            
+            .character-1, .character-2, .character-3 {
+                display: none;
+            }
+            
+            .inspiration-box {
+                padding: 25px;
+            }
+            
+            .inspiration-box h2 {
+                font-size: 1.8rem;
+            }
+            
+            .inspiration-text {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tree-left, .tree-right {
+                display: none;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .knowledge-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰 -->
+    <div class="decoration tree-left"></div>
+    <div class="decoration tree-right"></div>
+    <div class="decoration cloud"></div>
+    
+    <!-- 卡通形象 -->
+    <div class="cartoon-character character-1">🦋</div>
+    <div class="cartoon-character character-2">🐝</div>
+    <div class="cartoon-character character-3">🐞</div>
+    
+    <!-- 庆祝特效容器 -->
+    <div class="celebration-container" id="celebrationContainer"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="completion-badge">🏆</div>
+            <h1>🎉 课堂总结</h1>
+            <p class="subtitle">恭喜你完成了"敬畏生命"的学习之旅！</p>
+        </div>
+        
+        <!-- 重点知识卡片 -->
+        <div class="knowledge-cards">
+            <!-- 卡一：为什么敬畏生命 -->
+            <div class="knowledge-card">
+                <div class="card-icon">❓</div>
+                <h3>一、为什么要敬畏生命？</h3>
+                <ul class="knowledge-points">
+                    <li><strong>生命是脆弱的、艰难的</strong> - 生命容易受到伤害，面临各种挑战</li>
+                    <li><strong>生命是坚强的、崇高的、神圣的</strong> - 生命具有顽强的意志，能够创造奇迹</li>
+                    <li><strong>生命是大自然的奇迹</strong> - 每个生命都独一无二，值得珍惜</li>
+                </ul>
+            </div>
+            
+            <!-- 卡二：怎样敬畏生命 -->
+            <div class="knowledge-card">
+                <div class="card-icon">💡</div>
+                <h3>二、怎样敬畏生命？</h3>
+                <ul class="knowledge-points">
+                    <li><strong>尊重生命规律</strong> - 理解并遵循生命存在和发展的自然规律</li>
+                    <li><strong>关爱他人生命</strong> - 主动关心、帮助和保护他人的生命</li>
+                    <li><strong>坚持生命至上</strong> - 将生命放在第一位，珍惜每一个生命</li>
+                </ul>
+            </div>
+            
+            <!-- 卡三：生命的特点 -->
+            <div class="knowledge-card">
+                <div class="card-icon">✨</div>
+                <h3>三、人的生命特点</h3>
+                <ul class="knowledge-points">
+                    <li>每个人的生命都是独特的</li>
+                    <li>生命是不可逆的，只有一次</li>
+                    <li>生命是有限的，需要珍惜</li>
+                    <li>生命是代代接续的</li>
+                    <li>人的精神生命是不断传承的</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 学习收获 -->
+        <div class="learning-gains">
+            <h2>📚 学习收获</h2>
+            <div class="gains-grid">
+                <div class="gain-item">
+                    <div class="gain-icon">💝</div>
+                    <h4>情感升华</h4>
+                    <p>培养了珍爱生命、敬畏生命的情感态度</p>
+                </div>
+                <div class="gain-item">
+                    <div class="gain-icon">🧠</div>
+                    <h4>知识理解</h4>
+                    <p>掌握了敬畏生命的核心概念和实践方法</p>
+                </div>
+                <div class="gain-item">
+                    <div class="gain-icon">🤝</div>
+                    <h4>价值认同</h4>
+                    <p>建立了尊重生命、关爱他人的价值观</p>
+                </div>
+                <div class="gain-item">
+                    <div class="gain-icon">🌱</div>
+                    <h4>行动指南</h4>
+                    <p>获得了在日常生活中践行敬畏生命的具体方法</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 庆祝按钮 -->
+        <button class="celebration-btn" id="celebrationBtn">
+            点击庆祝！ 🎉
+        </button>
+        
+        <!-- 心灵寄语 -->
+        <div class="inspiration-box">
+            <h2>💫 心灵寄语</h2>
+            <div class="inspiration-text">
+                "每个生命都是一粒种子，蕴藏着无限的可能。<br>
+                敬畏生命，就是敬畏大自然最伟大的创造。<br>
+                让我们带着对生命的尊重与热爱，<br>
+                在人生的旅途中播撒善良，收获成长。"
+            </div>
+        </div>
+        
+        <!-- 返回按钮 -->
+        <div class="back-button-container">
+            <a href="index.html" class="back-button">
+                ← 返回选择页面
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // 庆祝特效元素
+        const celebrationItems = ['🎉', '🎊', '✨', '🌟', '💫', '🥳', '🎈', '🎁', '🏆', '💝', '🌱', '🌸', '🌷', '🌼', '🦋', '🐝', '🐞', '🐦', '🕊️'];
+        
+        // 创建庆祝特效
+        function createCelebration() {
+            const container = document.getElementById('celebrationContainer');
+            container.innerHTML = '';
+            
+            // 创建50个庆祝元素
+            for (let i = 0; i < 50; i++) {
+                const item = document.createElement('div');
+                item.className = 'celebration-item';
+                item.textContent = celebrationItems[Math.floor(Math.random() * celebrationItems.length)];
+                item.style.left = Math.random() * 100 + 'vw';
+                item.style.fontSize = (Math.random() * 2 + 1.5) + 'rem';
+                item.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                item.style.animationDelay = Math.random() * 1 + 's';
+                
+                container.appendChild(item);
+            }
+            
+            // 添加背景音乐（可选）
+            playCelebrationSound();
+            
+            // 5秒后清除特效
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+        
+        // 播放庆祝音效（可选）
+        function playCelebrationSound() {
+            try {
+                // 创建简单的音效
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                createBellSound(audioContext);
+            } catch (e) {
+                console.log('音频播放失败，继续视觉庆祝效果');
+            }
+        }
+        
+        // 创建铃声音效
+        function createBellSound(audioContext) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+            oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+            oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 1);
+        }
+        
+        // 庆祝按钮点击事件
+        document.getElementById('celebrationBtn').addEventListener('click', function() {
+            createCelebration();
+            
+            // 按钮动画效果
+            this.style.transform = 'scale(0.95)';
+            this.style.background = 'linear-gradient(45deg, #ff5722, #ff9800)';
+            
+            setTimeout(() => {
+                this.style.transform = '';
+                this.style.background = 'linear-gradient(45deg, #ff9800, #ff5722)';
+            }, 200);
+            
+            // 显示祝贺消息
+            showCongratulationMessage();
+        });
+        
+        // 显示祝贺消息
+        function showCongratulationMessage() {
+            const messages = [
+                "🎉 太棒了！你完成了重要的学习！",
+                "🌟 为你的努力和成长喝彩！",
+                "💝 带着对生命的敬畏继续前行吧！",
+                "🌱 每一次学习都是一次生命的成长！",
+                "✨ 你已经是生命的守护小专家了！"
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            // 临时显示祝贺消息
+            const tempMessage = document.createElement('div');
+            tempMessage.textContent = randomMessage;
+            tempMessage.style.position = 'fixed';
+            tempMessage.style.top = '50%';
+            tempMessage.style.left = '50%';
+            tempMessage.style.transform = 'translate(-50%, -50%)';
+            tempMessage.style.background = 'linear-gradient(45deg, #4caf50, #2e7d32)';
+            tempMessage.style.color = 'white';
+            tempMessage.style.padding = '20px 40px';
+            tempMessage.style.borderRadius = '15px';
+            tempMessage.style.fontSize = '1.5rem';
+            tempMessage.style.fontWeight = 'bold';
+            tempMessage.style.zIndex = '1000';
+            tempMessage.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+            tempMessage.style.animation = 'popIn 0.5s ease';
+            
+            document.body.appendChild(tempMessage);
+            
+            // 3秒后移除消息
+            setTimeout(() => {
+                tempMessage.style.animation = 'fadeOut 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(tempMessage);
+                }, 500);
+            }, 2000);
+        }
+        
+        // 添加淡出动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                to { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 页面加载时的初始化
+        window.addEventListener('load', function() {
+            // 页面加载动画
+            const container = document.querySelector('.container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // 卡片依次显示动画
+            const cards = document.querySelectorAll('.knowledge-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 500 + (index * 200));
+            });
+            
+            // 学习收获项动画
+            const gainItems = document.querySelectorAll('.gain-item');
+            gainItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'scale(0.8)';
+                
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'scale(1)';
+                }, 1000 + (index * 100));
+            });
+            
+            // 自动播放一次庆祝特效
+            setTimeout(() => {
+                createCelebration();
+            }, 1500);
+            
+            console.log('课堂总结页面加载完成！');
+        });
+        
+        // 为知识卡片添加点击效果
+        document.querySelectorAll('.knowledge-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'translateY(-15px) scale(1.02)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-10px)';
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>
